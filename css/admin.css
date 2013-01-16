@@ -1,0 +1,10 @@
+#toplevel_page_fb_sync .wp-menu-image a {
+    display:none;
+}
+#toplevel_page_fb_sync .wp-menu-image {
+    background: url('../img/sql-join-inner.png') no-repeat 6px -17px !important;
+}
+#toplevel_page_fb_sync:hover .wp-menu-image,
+#toplevel_page_fb_sync.current .wp-menu-image {
+    background: url('../img/sql-join-inner.png') no-repeat 6px 7px !important;
+}
