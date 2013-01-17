@@ -33,6 +33,7 @@ class FB_Sync {
     function admin_init() {
 
         $this->register_settings();
+        wp_enqueue_style( $this->slug, $this->baseurl . 'css/admin.css' );
 
         if ( !$this->is_plugin_page() )
             return false;
@@ -46,9 +47,16 @@ class FB_Sync {
             );
             $this->fb = new Facebook( $config );
 
-        }
+            if ( $this->is_oath_return() ) {
+                $this->fb->setExtendedAccessToken();
+                $access_token = $this->fb->getAccessToken();
+                update_option( $this->slug . '_access_token', $access_token );
+            }
 
-        wp_enqueue_style( $this->slug, $this->baseurl . 'css/admin.css' );
+            if ( $access_token = get_option( $this->slug . '_access_token' ) )
+                $this->fb->setAccessToken( $access_token );
+
+        }
 
     }
 
@@ -95,10 +103,18 @@ class FB_Sync {
         return false;
     }
 
+    function is_oath_return() {
+        if ( $this->is_plugin_page()
+            && !empty( $_GET['state'] )
+            && !empty( $_GET['code'] ) )
+            return true;
+        return false;
+    }
+
     function have_credentials() {
         if ( get_option( $this->slug . '_app_id' )
             && get_option( $this->slug . '_app_secret' )
-            && get_option( $this->slug . '_username' ) )
+            && get_option( $this->slug . '_access_token' ) )
             return true;
         return false;
     }
@@ -112,8 +128,7 @@ class FB_Sync {
     function register_settings() {
         $settings = array(
             'app_id',
-            'app_secret',
-            'access_token'
+            'app_secret'
         );
         foreach ( $settings as $s ) {
             register_setting( $this->slug, $this->slug . '_' . $s );
@@ -122,15 +137,41 @@ class FB_Sync {
 
     function fetch() {
 
-        if ( !get_option( $this->slug . '_app_id' ) ||
-            !get_option( $this->slug . '_app_secret' ) )
+        if ( !$this->have_credentials() )
             return false;
 
+        do {
 
-        //$fb_posts = $fb->api( '/' . get_option( $this->slug . '_username' ) . '/feed', 'GET' );
-        $fb_posts = $fb->api( '/me/feed', 'GET' );
+            //$fb_posts = $this->fb->api( '/me/feed?limit=0&until=2012-01-01', 'GET' );
+            //foreach( $fb_posts['data'] as $p ) {
+                //$this->parse( $p );
+            //}
+            //print_r($fb_posts);
 
-        print_r( $fb_posts );
+        } while( !empty( $fb_posts['after'] ) );
+
+    }
+
+    function parse( $post ) {
+
+        if ( empty( $post['type'] ) )
+            return false;
+
+        $function = 'parse_' . $post['type'];
+
+        if ( method_exists( $this, $function ) )
+            call_user_func( array( $this, $function ), $post );
+
+    }
+
+    function parse_status( $post ) {
+
+        $allowed_types = array( 'mobile_status_update' );
+        if ( empty( $post['status_type'] )
+            || !in_array( $post['status_type'], $allowed_types ) )
+            return false;
+
+        print_r($post);
 
     }
 

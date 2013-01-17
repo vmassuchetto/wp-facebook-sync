@@ -68,7 +68,6 @@
                         </label>
                     </th>
                     <td>
-
                         <?php if ( $this->have_access_token() ) : ?>
                             <p><?php echo get_option( $this->slug . '_access_token' ); ?></p>
                         <?php else : ?>
@@ -82,9 +81,7 @@
                             );
                             $login_url = $this->fb->getLoginUrl( $params );
                         ?>
-
                         <p><?php printf( __( '<a href="%s">Click here</a> to get a new access token.', $this->slug ), $login_url ); ?></p>
-
                     </td>
                 </tr>
 
@@ -104,7 +101,6 @@
             </tr>
 
         </table>
-
 
     </form>
 
