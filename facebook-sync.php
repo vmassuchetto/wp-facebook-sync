@@ -113,8 +113,7 @@ class FB_Sync {
 
     function have_credentials() {
         if ( get_option( $this->slug . '_app_id' )
-            && get_option( $this->slug . '_app_secret' )
-            && get_option( $this->slug . '_access_token' ) )
+            && get_option( $this->slug . '_app_secret' ) )
             return true;
         return false;
     }
@@ -140,15 +139,27 @@ class FB_Sync {
         if ( !$this->have_credentials() )
             return false;
 
-        do {
+        $i = 0;
+        $interval = 3;
+        $next = true;
 
-            //$fb_posts = $this->fb->api( '/me/feed?limit=0&until=2012-01-01', 'GET' );
-            //foreach( $fb_posts['data'] as $p ) {
-                //$this->parse( $p );
-            //}
-            //print_r($fb_posts);
+        while ( $next ) {
 
-        } while( !empty( $fb_posts['after'] ) );
+            $query = sprintf( '/me/feed?limit=%s&offset=%d', $interval, $interval * $i++ );
+            $data = $this->fb->api( $query, 'GET' );
+
+            if ( !empty( $data['data'] ) ) {
+                foreach( $data['data'] as $p ) {
+                    $this->parse( $p );
+                }
+            }
+
+            if ( empty( $data['paging']['next'] ) )
+                $next = false;
+
+            echo "\n\n" . $query;
+
+        }
 
     }
 
@@ -171,7 +182,7 @@ class FB_Sync {
             || !in_array( $post['status_type'], $allowed_types ) )
             return false;
 
-        print_r($post);
+        echo "\n\n" . $post['created_time'] . ' ' . $post['message'];
 
     }
 

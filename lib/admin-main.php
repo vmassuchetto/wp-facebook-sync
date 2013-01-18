@@ -90,11 +90,13 @@
             <tr valign="top">
                 <td colspan="2">
                     <p>
-                        <a
-                            class="button"
-                            href="<?php echo admin_url( 'admin.php?page=' . $this->slug . '_test' ); ?>">
-                            <?php _e( 'Test Credentials', $this->slug ); ?>
-                        </a>&nbsp;
+                        <?php if ( $this->have_credentials() ) : ?>
+                            <a
+                                class="button"
+                                href="<?php echo admin_url( 'admin.php?page=' . $this->slug . '_test' ); ?>">
+                                <?php _e( 'Test Credentials', $this->slug ); ?>
+                            </a>&nbsp;
+                        <?php endif; ?>
                         <?php submit_button( false, 'primary', false, false ); ?>
                     </p>
                 </td>
