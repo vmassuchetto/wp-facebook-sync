@@ -42,6 +42,7 @@ class FB_Sync {
 
         add_action( 'admin_init', array( $this, 'admin_init' ) );
         add_action( 'admin_menu', array( $this, 'admin_menu' ) );
+        add_action( 'wp_ajax_' . $this->slug . '_test_sync', array( $this, 'sync' ) );
         add_filter( 'pre_update_option_' . $this->slug . '_content', array( $this, 'pre_update_option_content' ), 10, 2 );
 
     }
@@ -61,6 +62,8 @@ class FB_Sync {
 
         if ( !$this->is_plugin_page() )
             return false;
+
+        wp_enqueue_script( 'jquery' );
 
         if ( $this->have_credentials() ) {
 

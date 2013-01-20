@@ -9,7 +9,7 @@
 
     <?php endif; ?>
 
-    <form method="POST" action="options.php">
+    <form method="POST" action="options.php" id="<?php echo $this->slug; ?>_form">
 
         <?php settings_fields( $this->slug ); ?>
 
@@ -87,16 +87,59 @@
 
             <?php endif; ?>
 
+            <?php if ( $this->have_credentials() && $this->have_access_token() ) : ?>
+
+                <tr valid="top">
+                    <th scope="row" colspan="2">
+                        <h3><?php _e( 'Settings', $this->slug ); ?></h3>
+                    </th>
+                </tr>
+
+                <?php
+                    $types = array(
+                        'status_updates' => __( 'Status updates' ),
+                        'status_updates_comments' => __( 'Comments on status updates (requires the above setting)' )
+                    );
+                ?>
+
+                <tr valign="top">
+                    <th scope="row">
+                        <?php _e( 'Content to be copied', $this->slug ); ?>
+                    </th>
+                    <td>
+                    <fieldset>
+
+                        <?php foreach( $types as $k => $v ) : ?>
+
+                            <?php $id = $this->slug . '_content_' . $k; ?>
+
+                            <label for="<?php echo $id; ?>">
+                                <input
+                                    type="checkbox"
+                                    value="<?php echo $k; ?>"
+                                    id="<?php echo $id; ?>"
+                                    name="<?php echo $this->slug; ?>_content[]"
+                                    <?php echo in_array( $k, $this->content ) ? 'checked="checked"' : ''; ?> />
+                                <?php echo $v; ?>
+                            </label><br/>
+
+                        <?php endforeach; ?>
+
+                    </fieldset>
+                    </td>
+                </tr>
+
+            <?php endif; ?>
+
             <tr valign="top">
                 <td colspan="2">
                     <p>
-                        <?php if ( $this->have_credentials() ) : ?>
-                            <a
-                                class="button"
-                                href="<?php echo admin_url( 'admin.php?page=' . $this->slug . '_test' ); ?>">
-                                <?php _e( 'Test Credentials', $this->slug ); ?>
-                            </a>&nbsp;
-                        <?php endif; ?>
+                        <a
+                            class="button"
+                            href="javascript:void(0);"
+                            id="<?php echo $this->slug; ?>_test_sync">
+                            <?php _e( 'Test Sync', $this->slug ); ?>
+                        </a>&nbsp;
                         <?php submit_button( false, 'primary', false, false ); ?>
                     </p>
                 </td>
@@ -108,4 +151,31 @@
 
     </form>
 
+    <div id="<?php echo $this->slug; ?>_test_sync_result"></div>
+
 </div>
+
+<script type="text/javascript">
+
+var form = jQuery('#<?php echo $this->slug; ?>_form');
+var test = jQuery('#<?php echo $this->slug; ?>_test_sync');
+var result = jQuery('#<?php echo $this->slug; ?>_test_sync_result');
+
+test.click(function(){
+
+    jQuery.ajax({
+        url: ajaxurl,
+        data: {
+            'action': '<?php echo $this->slug; ?>_test_sync',
+            'form': form.serialize()
+        },
+        success: function(data) {
+            jQuery(result).html(data);
+            result.slideDown();
+        }
+    });
+
+});
+
+
+</script>
