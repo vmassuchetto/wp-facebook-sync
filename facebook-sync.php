@@ -45,6 +45,14 @@ class FB_Sync {
 
     }
 
+    function activate() {
+        update_option( FBSYNC_SLUG . '_activation_date', date( 'Y-m-d H:i:s' ) );
+    }
+
+    function deactivate() {
+        delete_option( FBSYNC_SLUG . '_activation_date' );
+    }
+
     function admin_init() {
 
         $this->register_settings();
@@ -207,3 +215,7 @@ function fb_sync_init() {
     new FB_Sync();
 }
 add_action( 'plugins_loaded', 'fb_sync_init' );
+
+register_activation_hook( __FILE__, array( 'FB_Sync', 'activate' ) );
+register_deactivation_hook( __FILE__, array( 'FB_Sync', 'deactivate' ) );
+
