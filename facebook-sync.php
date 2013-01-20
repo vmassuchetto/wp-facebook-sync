@@ -97,12 +97,6 @@ class FB_Sync {
             __( 'Settings', $this->slug ),
             'edit_posts', $this->slug,
             array( $this, 'admin_main' ) );
-        add_submenu_page(
-            $this->slug,
-            __( 'Test Sync', $this->slug ),
-            __( 'Test Sync', $this->slug ),
-            'edit_posts', $this->slug . '_test',
-            array( $this, 'admin_test' ) );
     }
 
     function admin_main() {
