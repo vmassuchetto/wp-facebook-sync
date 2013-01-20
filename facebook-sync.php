@@ -140,7 +140,8 @@ class FB_Sync {
     function is_oath_return() {
         if ( $this->is_plugin_page()
             && !empty( $_GET['state'] )
-            && !empty( $_GET['code'] ) )
+            && !empty( $_GET['code'] )
+            && empty( $_POST[ $this->slug . '_save' ] ) )
             return true;
         return false;
     }

@@ -104,6 +104,8 @@
 
         </table>
 
+        <input type="hidden" name="<?php echo $this->slug; ?>_save" value="1" />
+
     </form>
 
 </div>
