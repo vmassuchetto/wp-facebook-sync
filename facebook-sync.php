@@ -8,17 +8,27 @@
  * Author URI: http://vinicius.soylocoporti.org.br
  */
 
+define( 'FBSYNC_SLUG', 'fb_sync' );
+
 class FB_Sync {
 
     var $random;
     var $slug;
+
+    var $link_create_app;
+    var $link_explorer;
+
     var $basedir;
     var $baseurl;
+
+    var $content;
+    var $log;
 
     function FB_Sync () {
 
         $this->random = rand( 0, 10000 );
-        $this->slug = 'fb_sync';
+        $this->slug = FBSYNC_SLUG;
+
         $this->link_create_app = 'http://developers.facebook.com/apps';
         $this->link_explorer = 'https://developers.facebook.com/tools/explorer';
 
