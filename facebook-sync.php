@@ -169,14 +169,15 @@ class FB_Sync {
     function register_settings() {
         $settings = array(
             'app_id',
-            'app_secret'
+            'app_secret',
+            'content'
         );
         foreach ( $settings as $s ) {
             register_setting( $this->slug, $this->slug . '_' . $s );
         }
     }
 
-    function fetch() {
+    function sync() {
 
         if ( !$this->have_credentials() )
             return false;
