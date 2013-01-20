@@ -59,6 +59,23 @@
                 </td>
             </tr>
 
+            <tr valign="top">
+                <th scope="row">
+                    <label for="<?php echo $this->slug; ?>_user_id">
+                        <?php _e( 'Facebook User ID', $this->slug ); ?>
+                    </label>
+                </th>
+                <td>
+                    <input
+                        type="text"
+                        name="<?php echo $this->slug; ?>_user_id"
+                        value="<?php echo get_option( $this->slug . '_user_id' ); ?>" />
+                    <p class="description">
+                        <?php _e( 'This can be a user, page or group ID. To get your ID visit http://graph.facebook.com/YOUR_USERNAME', $this->slug ); ?>
+                    </p>
+                </td>
+            </tr>
+
             <?php if ( $this->have_credentials() ) : ?>
 
                 <tr valign="top">

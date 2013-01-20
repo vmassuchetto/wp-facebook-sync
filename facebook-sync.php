@@ -157,7 +157,8 @@ class FB_Sync {
 
     function have_credentials() {
         if ( get_option( $this->slug . '_app_id' )
-            && get_option( $this->slug . '_app_secret' ) )
+            && get_option( $this->slug . '_app_secret' )
+            && get_option( $this->slug . '_user_id' ) )
             return true;
         return false;
     }
@@ -172,6 +173,7 @@ class FB_Sync {
         $settings = array(
             'app_id',
             'app_secret',
+            'user_id',
             'content'
         );
         foreach ( $settings as $s ) {
