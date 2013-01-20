@@ -35,6 +35,11 @@ class FB_Sync {
         $this->basedir = plugin_dir_path( __FILE__ );
         $this->baseurl = plugin_dir_url( __FILE__ );
 
+        if ( !is_array( $this->content = get_option( $this->slug . '_content' ) ) )
+            $this->content = array();
+
+        $this->log = array();
+
         add_action( 'admin_init', array( $this, 'admin_init' ) );
         add_action( 'admin_menu', array( $this, 'admin_menu' ) );
 
