@@ -67,12 +67,16 @@ class FB_Sync {
 
         if ( $this->have_credentials() ) {
 
+            /* Facebook object instantiation */
+
             require( $this->basedir . 'inc/facebook-php-sdk/facebook.php' );
             $config = array(
                 'appId'  => get_option( $this->slug . '_app_id' ),
                 'secret' => get_option( $this->slug . '_app_secret' ),
             );
             $this->fb = new Facebook( $config );
+
+            /* Getting returned access token */
 
             if ( $this->is_oath_return() ) {
                 $this->fb->setExtendedAccessToken();
