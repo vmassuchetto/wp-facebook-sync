@@ -38,7 +38,18 @@ class FB_Sync {
         if ( !is_array( $this->content = get_option( $this->slug . '_content' ) ) )
             $this->content = array();
 
+        $this->user_id = get_option( $this->slug . '_user_id' );
+
         $this->log = array();
+
+        /* Facebook object instantiation */
+
+        require( $this->basedir . 'inc/facebook-php-sdk/facebook.php' );
+        $config = array(
+            'appId'  => get_option( $this->slug . '_app_id' ),
+            'secret' => get_option( $this->slug . '_app_secret' ),
+        );
+        $this->fb = new Facebook( $config );
 
         add_action( 'admin_init', array( $this, 'admin_init' ) );
         add_action( 'admin_menu', array( $this, 'admin_menu' ) );
@@ -66,15 +77,6 @@ class FB_Sync {
         wp_enqueue_script( 'jquery' );
 
         if ( $this->have_credentials() ) {
-
-            /* Facebook object instantiation */
-
-            require( $this->basedir . 'inc/facebook-php-sdk/facebook.php' );
-            $config = array(
-                'appId'  => get_option( $this->slug . '_app_id' ),
-                'secret' => get_option( $this->slug . '_app_secret' ),
-            );
-            $this->fb = new Facebook( $config );
 
             /* Getting returned access token */
 
