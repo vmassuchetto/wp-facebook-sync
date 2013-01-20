@@ -42,6 +42,7 @@ class FB_Sync {
 
         add_action( 'admin_init', array( $this, 'admin_init' ) );
         add_action( 'admin_menu', array( $this, 'admin_menu' ) );
+        add_filter( 'pre_update_option_' . $this->slug . '_content', array( $this, 'pre_update_option_content' ), 10, 2 );
 
     }
 
@@ -108,8 +109,24 @@ class FB_Sync {
         include( $this->basedir . 'lib/admin-main.php' );
     }
 
-    function admin_test() {
-        include( $this->basedir . 'lib/admin-test.php' );
+    /**
+    /* Content options consistency
+    */
+    function pre_update_option_content( $newvalue, $oldvalue) {
+
+        if ( !is_array( $newvalue ) )
+            return $newvalue;
+
+        $updated = $newvalue;
+
+        if ( !in_array( 'status_updates', $newvalue )
+            && in_array( 'status_updates_comments', $newvalue ) )
+            $updated[] = 'status_updates';
+
+        if ( $newvalue != $updated )
+            return $updated;
+        return $newvalue;
+
     }
 
     function is_page_updated() {
